@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>web component</title>
+</head>
+<body>
+  <div>web component</div>
+  <test-component text='123'>
+    <span slot='title'>text reverse</span>
+  </test-component>
+  <template id='test-component'>
+    <h1><slot name='title'>default title</slot></h1>
+    <span id='text'></span>
+  </template>
+
+  <script>
+    class TestComponent extends HTMLElement {
+      constructor() {
+        super()
+        console.log(this)
+        // const shadowRoot = this.attachShadow({ mode: 'open' });
+        // const text = this.getAttribute('text') || '';
+        // const wrapper = document.createElement('span');
+        // wrapper.textContent = text.split('').reverse().join('');
+        // shadowRoot.appendChild(wrapper);
+
+        // const style = document.createElement('style');
+        // style.textContent = `* {
+        //     background: red;
+        // }`
+        // shadowRoot.appendChild(style);
+
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        const text = this.getAttribute('text') || '';
+        const template = document.getElementById('test-component').content.cloneNode(true);
+        template.getElementById('text').textContent = text.split('').reverse().join('');
+        shadowRoot.appendChild(template);
+      }
+      connectedCallback() {
+        console.log('connect')
+      }
+    }
+
+    window.customElements.define('test-component', TestComponent)
+  </script>
+</body>
+</html>
